@@ -1,0 +1,1252 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8"/>
+<meta name="viewport" content="width=device-width, initial-scale=1"/>
+<title>Bitshala — A Pathshala for Bitcoin</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=JetBrains+Mono:wght@400;500&display=swap">
+<script src="project/assets/image-slot.js"></script>
+<style>
+/* ============ FONTS ============ */
+@font-face {
+  font-family: 'Apfel Grotezk';
+  src: url('project/assets/fonts/ApfelGrotezk-Regular.woff2') format('woff2');
+  font-weight: 400; font-style: normal; font-display: swap;
+}
+@font-face {
+  font-family: 'Apfel Grotezk';
+  src: url('project/assets/fonts/ApfelGrotezk-Mittel.woff2') format('woff2');
+  font-weight: 500; font-style: normal; font-display: swap;
+}
+@font-face {
+  font-family: 'Apfel Grotezk';
+  src: url('project/assets/fonts/ApfelGrotezk-Fett.woff2') format('woff2');
+  font-weight: 700; font-style: normal; font-display: swap;
+}
+@font-face {
+  font-family: 'Apfel Grotezk';
+  src: url('project/assets/fonts/ApfelGrotezk-Satt.woff2') format('woff2');
+  font-weight: 900; font-style: normal; font-display: swap;
+}
+@font-face {
+  font-family: 'Satoshi';
+  src: url('project/assets/fonts/Satoshi-Regular.ttf') format('truetype');
+  font-weight: 400; font-style: normal; font-display: swap;
+}
+@font-face {
+  font-family: 'Satoshi';
+  src: url('project/assets/fonts/Satoshi-Medium.woff') format('woff');
+  font-weight: 500; font-style: normal; font-display: swap;
+}
+@font-face {
+  font-family: 'Satoshi';
+  src: url('project/assets/fonts/Satoshi-Bold.ttf') format('truetype');
+  font-weight: 700; font-style: normal; font-display: swap;
+}
+
+/* ============ TOKENS ============ */
+:root {
+  --ink: #0A0908;
+  --ink-soft: #1a1816;
+  --orange: #FF6B1A;
+  --orange-deep: #E85A0C;
+  --orange-glow: #FF8A3D;
+  --cream: #F4ECDD;
+  --cream-dark: #E8DCC4;
+  --paper: #FAF4E6;
+  --line: rgba(10, 9, 8, 0.12);
+  --line-strong: rgba(10, 9, 8, 0.85);
+
+  --shadow-card: 0 2px 0 rgba(10,9,8,0.08), 0 18px 40px -12px rgba(10,9,8,0.35), 0 4px 8px -2px rgba(10,9,8,0.15);
+  --shadow-press: 0 1px 0 rgba(10,9,8,0.04), 0 4px 8px -4px rgba(10,9,8,0.2);
+  --shadow-stamp: 0 8px 24px -6px rgba(232, 90, 12, 0.5);
+
+  --display: 'Apfel Grotezk', 'Helvetica Neue', sans-serif;
+  --body: 'Satoshi', 'Helvetica Neue', sans-serif;
+  --mono: 'JetBrains Mono', ui-monospace, 'SF Mono', Menlo, monospace;
+}
+
+* { box-sizing: border-box; margin: 0; padding: 0; }
+
+html { scroll-behavior: smooth; }
+
+body {
+  font-family: var(--body);
+  background: var(--cream);
+  color: var(--ink);
+  font-size: 16px;
+  line-height: 1.5;
+  -webkit-font-smoothing: antialiased;
+  overflow-x: hidden;
+  position: relative;
+}
+
+/* ============ GRAIN OVERLAY ============ */
+body::before {
+  content: '';
+  position: fixed;
+  inset: 0;
+  pointer-events: none;
+  z-index: 9999;
+  opacity: 0.35;
+  mix-blend-mode: multiply;
+  background-image: url("data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' width='240' height='240'><filter id='n'><feTurbulence type='fractalNoise' baseFrequency='0.9' numOctaves='2' stitchTiles='stitch'/><feColorMatrix values='0 0 0 0 0.05 0 0 0 0 0.04 0 0 0 0 0.03 0 0 0 0.55 0'/></filter><rect width='100%' height='100%' filter='url(%23n)'/></svg>");
+}
+
+/* warm parchment tint */
+body::after {
+  content: '';
+  position: fixed;
+  inset: 0;
+  pointer-events: none;
+  z-index: 9998;
+  background:
+    radial-gradient(ellipse at 20% 0%, rgba(255, 200, 130, 0.18), transparent 60%),
+    radial-gradient(ellipse at 100% 100%, rgba(232, 90, 12, 0.08), transparent 50%);
+}
+
+/* ============ LAYOUT ============ */
+.shell {
+  max-width: 1440px;
+  margin: 0 auto;
+  padding: 0 48px;
+  position: relative;
+}
+
+@media (max-width: 768px) {
+  .shell { padding: 0 20px; }
+}
+
+/* ============ TYPE ============ */
+.eyebrow {
+  font-family: var(--mono);
+  font-size: 11px;
+  letter-spacing: 0.18em;
+  text-transform: uppercase;
+  color: var(--ink);
+  display: inline-flex;
+  align-items: center;
+  gap: 10px;
+}
+.eyebrow::before {
+  content: '';
+  width: 24px; height: 1px;
+  background: currentColor;
+}
+.section-title {
+  font-family: var(--display);
+  font-weight: 900;
+  font-size: clamp(48px, 6.5vw, 96px);
+  line-height: 0.88;
+  letter-spacing: -0.04em;
+  text-transform: uppercase;
+  text-wrap: balance;
+}
+.accent { color: var(--orange); }
+
+/* ============ NAV ============ */
+.nav {
+  position: sticky;
+  top: 0;
+  z-index: 100;
+  background: var(--cream);
+  border-bottom: 1px solid var(--line);
+  backdrop-filter: blur(8px);
+}
+.nav-inner {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 18px 0;
+  gap: 32px;
+}
+.nav-logo {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  font-family: var(--display);
+  font-weight: 900;
+  font-size: 22px;
+  letter-spacing: -0.02em;
+  text-transform: lowercase;
+  text-decoration: none;
+  color: var(--ink);
+}
+.nav-logo img {
+  height: 36px; width: auto;
+}
+.nav-links {
+  display: flex;
+  gap: 36px;
+  list-style: none;
+  font-family: var(--mono);
+  font-size: 12px;
+  letter-spacing: 0.12em;
+  text-transform: uppercase;
+}
+.nav-links a {
+  color: var(--ink);
+  text-decoration: none;
+  position: relative;
+  padding: 6px 0;
+}
+.nav-links a::after {
+  content: '';
+  position: absolute;
+  left: 0; bottom: 0;
+  width: 0; height: 2px;
+  background: var(--orange);
+  transition: width 180ms ease;
+}
+.nav-links a:hover::after { width: 100%; }
+
+/* ============ BUTTONS ============ */
+.btn {
+  display: inline-flex;
+  align-items: center;
+  gap: 10px;
+  font-family: var(--mono);
+  font-size: 12px;
+  letter-spacing: 0.14em;
+  text-transform: uppercase;
+  padding: 16px 24px;
+  border-radius: 6px;
+  border: 1.5px solid var(--ink);
+  cursor: pointer;
+  text-decoration: none;
+  background: var(--cream);
+  color: var(--ink);
+  transition: transform 120ms ease, box-shadow 120ms ease;
+  box-shadow: 4px 4px 0 0 var(--ink);
+  font-weight: 500;
+}
+.btn:hover { transform: translate(-1px, -1px); box-shadow: 5px 5px 0 0 var(--ink); }
+.btn:active { transform: translate(4px, 4px); box-shadow: 0 0 0 0 var(--ink); }
+.btn-primary { background: var(--orange); color: var(--ink); }
+.btn-dark { background: var(--ink); color: var(--cream); box-shadow: 4px 4px 0 0 var(--orange); }
+.btn-dark:hover { box-shadow: 5px 5px 0 0 var(--orange); transform: translate(-1px, -1px); }
+.btn-dark:active { box-shadow: 0 0 0 0 var(--orange); transform: translate(4px, 4px); }
+.btn .arrow {
+  display: inline-block;
+  transition: transform 180ms ease;
+}
+.btn:hover .arrow { transform: translateX(3px); }
+
+/* ============ STAMPS / STICKERS ============ */
+.stamp-plus {
+  position: absolute;
+  width: 56px; height: 56px;
+  background: var(--orange);
+  display: grid; place-items: center;
+  border-radius: 12px;
+  box-shadow: var(--shadow-stamp);
+  font-family: var(--display);
+  font-weight: 900;
+  font-size: 36px;
+  color: var(--ink);
+  line-height: 1;
+  user-select: none;
+  z-index: 10;
+}
+.stamp-plus.tilt-l { transform: rotate(-8deg); }
+.stamp-plus.tilt-r { transform: rotate(12deg); }
+
+.stamp-circle {
+  position: absolute;
+  width: 88px; height: 88px;
+  border-radius: 50%;
+  background: var(--ink);
+  color: var(--cream);
+  display: grid; place-items: center;
+  font-family: var(--mono);
+  font-size: 10px;
+  letter-spacing: 0.1em;
+  text-transform: uppercase;
+  text-align: center;
+  line-height: 1.2;
+  padding: 8px;
+  transform: rotate(-12deg);
+  box-shadow: 0 12px 28px -8px rgba(10,9,8,0.4);
+  z-index: 10;
+}
+
+/* ============ HERO ============ */
+.hero {
+  position: relative;
+  padding: 64px 0 96px;
+  overflow: hidden;
+}
+.hero-grid-bg {
+  position: absolute;
+  inset: 0;
+  background-image:
+    linear-gradient(var(--line) 1px, transparent 1px),
+    linear-gradient(90deg, var(--line) 1px, transparent 1px);
+  background-size: 56px 56px;
+  background-position: -1px -1px;
+  opacity: 0.6;
+  pointer-events: none;
+  mask-image: radial-gradient(ellipse at center, black 30%, transparent 80%);
+  -webkit-mask-image: radial-gradient(ellipse at center, black 30%, transparent 80%);
+}
+.hero-meta {
+  display: flex;
+  justify-content: space-between;
+  align-items: flex-end;
+  margin-bottom: 36px;
+  font-family: var(--mono);
+  font-size: 11px;
+  letter-spacing: 0.16em;
+  text-transform: uppercase;
+  color: var(--ink);
+  opacity: 0.7;
+}
+.hero-title {
+  font-family: var(--display);
+  font-weight: 900;
+  font-size: clamp(80px, 14vw, 220px);
+  line-height: 0.82;
+  letter-spacing: -0.05em;
+  text-transform: uppercase;
+  position: relative;
+}
+.hero-title .pathshala { color: var(--orange); display: inline-block; }
+.hero-title .of { font-style: italic; font-weight: 400; font-family: var(--display); }
+
+.hero-tagline {
+  margin-top: 36px;
+  display: flex;
+  align-items: flex-start;
+  justify-content: space-between;
+  gap: 48px;
+  flex-wrap: wrap;
+}
+.hero-tagline-left {
+  max-width: 540px;
+  font-size: 17px;
+  line-height: 1.55;
+  color: var(--ink);
+}
+.hero-tagline-left strong { font-weight: 700; }
+.hero-ctas { display: flex; gap: 14px; flex-wrap: wrap; align-items: flex-start; }
+
+/* big background watermark word */
+.hero-bg-word {
+  position: absolute;
+  bottom: -40px;
+  right: -30px;
+  font-family: var(--display);
+  font-weight: 900;
+  font-size: 380px;
+  line-height: 1;
+  color: var(--orange);
+  opacity: 0.06;
+  pointer-events: none;
+  letter-spacing: -0.06em;
+  user-select: none;
+}
+
+/* ============ SECTION COMMON ============ */
+section { position: relative; padding: 110px 0; }
+.section-head {
+  display: flex;
+  flex-direction: column;
+  gap: 18px;
+  margin-bottom: 64px;
+  max-width: 1000px;
+}
+.section-head .section-sub {
+  font-family: var(--body);
+  font-size: 17px;
+  line-height: 1.55;
+  max-width: 620px;
+  color: var(--ink);
+  opacity: 0.78;
+  margin-top: 4px;
+}
+
+/* ============ TREE SECTION ============ */
+.tree-wrap {
+  position: relative;
+  height: 760px;
+  margin: 40px auto 0;
+}
+
+/* leaf cards floating around the tree */
+.leaf {
+  position: absolute;
+  width: 230px;
+  background: var(--paper);
+  border: 1.5px solid var(--ink);
+  border-radius: 10px;
+  padding: 18px;
+  box-shadow: var(--shadow-card);
+  cursor: pointer;
+  transition: transform 220ms cubic-bezier(.2,.7,.3,1.2), box-shadow 200ms ease;
+  color: var(--ink);
+  text-decoration: none;
+  z-index: 5;
+}
+.leaf, .leaf * { text-decoration: none; color: inherit; }
+.leaf:hover { transform: translate(-2px, -4px) rotate(var(--rot, 0deg)) scale(1.02); box-shadow: 0 30px 60px -16px rgba(10,9,8,0.45); }
+.leaf:active { transform: rotate(var(--rot, 0deg)) translate(2px, 2px); box-shadow: var(--shadow-press); }
+.leaf-label {
+  font-family: var(--mono);
+  font-size: 10px;
+  letter-spacing: 0.16em;
+  text-transform: uppercase;
+  opacity: 0.6;
+  margin-bottom: 10px;
+}
+.leaf-title {
+  font-family: var(--display);
+  font-weight: 700;
+  font-size: 22px;
+  line-height: 1;
+  letter-spacing: -0.02em;
+  text-transform: uppercase;
+  margin-bottom: 8px;
+}
+.leaf-desc {
+  font-size: 13px;
+  line-height: 1.4;
+  opacity: 0.75;
+}
+.leaf-tag {
+  display: inline-block;
+  margin-top: 12px;
+  font-family: var(--mono);
+  font-size: 10px;
+  letter-spacing: 0.14em;
+  text-transform: uppercase;
+  background: var(--orange);
+  color: var(--ink);
+  padding: 4px 8px;
+  border-radius: 4px;
+}
+.leaf.dark { background: var(--ink); color: var(--cream); }
+.leaf.dark .leaf-desc { opacity: 0.7; }
+.leaf.dark .leaf-tag { background: var(--orange); color: var(--ink); }
+
+/* tilt helpers */
+.tilt-1 { --rot: -1.4deg; transform: rotate(-1.4deg); }
+.tilt-2 { --rot: 1.6deg; transform: rotate(1.6deg); }
+.tilt-3 { --rot: -2.2deg; transform: rotate(-2.2deg); }
+.tilt-4 { --rot: 1deg; transform: rotate(1deg); }
+.tilt-5 { --rot: -0.8deg; transform: rotate(-0.8deg); }
+.tilt-6 { --rot: 2.4deg; transform: rotate(2.4deg); }
+
+/* ============ LOGO STRIPS ============ */
+.strip {
+  background: var(--ink);
+  color: var(--cream);
+  border-radius: 14px;
+  padding: 28px 36px;
+  display: grid;
+  grid-template-columns: 200px 1fr;
+  align-items: center;
+  gap: 36px;
+  box-shadow: var(--shadow-card);
+  margin-bottom: 18px;
+  position: relative;
+}
+.strip.cream {
+  background: var(--paper);
+  color: var(--ink);
+  border: 1.5px solid var(--ink);
+}
+.strip-label {
+  font-family: var(--mono);
+  font-size: 11px;
+  letter-spacing: 0.18em;
+  text-transform: uppercase;
+  opacity: 0.7;
+  border-right: 1px dashed currentColor;
+  padding-right: 24px;
+}
+.strip-logos {
+  display: flex;
+  gap: 48px;
+  align-items: center;
+  flex-wrap: wrap;
+  font-family: var(--display);
+  font-weight: 700;
+  font-size: 22px;
+  letter-spacing: -0.02em;
+}
+.strip-logos .org {
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  opacity: 0.85;
+}
+.strip-logos .org .dot {
+  width: 10px; height: 10px;
+  background: var(--orange);
+  border-radius: 50%;
+  flex-shrink: 0;
+}
+.strip.cream .strip-logos .org .dot { background: var(--ink); }
+
+/* ============ STAIRCASE ============ */
+.stairs-section {
+  background: var(--ink);
+  color: var(--cream);
+  position: relative;
+  overflow: hidden;
+}
+.stairs-section .section-title { color: var(--cream); }
+.stairs-section .section-head .section-sub { color: var(--cream); opacity: 0.7; }
+.stairs-section .eyebrow { color: var(--orange); }
+
+.stairs {
+  position: relative;
+  height: 620px;
+  margin-top: 40px;
+  overflow-x: auto;
+  overflow-y: visible;
+  padding-bottom: 30px;
+}
+/* hide scrollbar but keep scroll functionality */
+.stairs::-webkit-scrollbar { height: 4px; }
+.stairs::-webkit-scrollbar-track { background: rgba(255,255,255,0.05); border-radius: 2px; }
+.stairs::-webkit-scrollbar-thumb { background: rgba(255,107,26,0.4); border-radius: 2px; }
+
+.stairs-track {
+  position: relative;
+  width: 1380px;
+  height: 100%;
+}
+
+.step {
+  position: absolute;
+  width: 230px;
+  height: 130px;
+  border-radius: 4px;
+  background: linear-gradient(180deg, #2a2724 0%, #1a1816 100%);
+  border: 1px solid #3a3633;
+  padding: 18px 22px;
+  display: flex;
+  flex-direction: column;
+  justify-content: space-between;
+  cursor: pointer;
+  transition: transform 220ms cubic-bezier(.2,.7,.3,1.2), box-shadow 220ms ease;
+  box-shadow:
+    0 0 0 1px rgba(255,107,26,0.6),
+    8px 8px 0 -1px #0a0908,
+    16px 16px 0 -1px rgba(255,107,26,0.5),
+    0 24px 40px -10px rgba(0,0,0,0.6);
+}
+.step::before {
+  content: '';
+  position: absolute;
+  inset: -2px;
+  border-radius: 6px;
+  border: 2px solid var(--orange);
+  opacity: 0.9;
+  filter: drop-shadow(0 0 8px rgba(255,107,26,0.6));
+  pointer-events: none;
+}
+.step:hover { transform: translate(-3px, -5px); }
+.step:active {
+  transform: translate(4px, 4px);
+  box-shadow: 0 0 0 1px rgba(255,107,26,0.4), 2px 2px 0 -1px #0a0908;
+}
+
+.step-num {
+  font-family: var(--mono);
+  font-size: 11px;
+  letter-spacing: 0.16em;
+  color: var(--orange);
+}
+.step-title {
+  font-family: var(--display);
+  font-weight: 700;
+  font-size: 22px;
+  line-height: 1;
+  letter-spacing: -0.02em;
+  text-transform: uppercase;
+  color: var(--cream);
+  margin-top: 6px;
+}
+.step-desc {
+  font-family: var(--body);
+  font-size: 12px;
+  line-height: 1.4;
+  color: var(--cream);
+  opacity: 0.65;
+}
+
+/* ============ WALL OF LOVE ============ */
+.wall {
+  display: grid;
+  grid-template-columns: repeat(4, 1fr);
+  gap: 22px;
+  position: relative;
+}
+.quote {
+  background: var(--paper);
+  border: 1.5px solid var(--ink);
+  border-radius: 8px;
+  padding: 22px;
+  box-shadow: var(--shadow-card);
+  display: flex;
+  flex-direction: column;
+  gap: 14px;
+  position: relative;
+  transition: transform 200ms cubic-bezier(.2,.7,.3,1.2), box-shadow 200ms ease;
+}
+.quote:hover { transform: translate(-2px, -3px); box-shadow: 0 26px 50px -12px rgba(10,9,8,0.45), 0 6px 0 rgba(10,9,8,0.1); }
+.quote.dark { background: var(--ink); color: var(--cream); }
+.quote.orange { background: var(--orange); color: var(--ink); }
+.quote.tall { grid-row: span 2; }
+.quote-text {
+  font-family: var(--body);
+  font-size: 14px;
+  line-height: 1.55;
+  font-weight: 500;
+}
+.quote-text.lg { font-size: 17px; }
+.quote-meta {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  margin-top: auto;
+  font-family: var(--mono);
+  font-size: 10px;
+  letter-spacing: 0.14em;
+  text-transform: uppercase;
+}
+.quote-avatar {
+  width: 32px; height: 32px;
+  border-radius: 50%;
+  background: var(--orange);
+  border: 1.5px solid var(--ink);
+  display: grid; place-items: center;
+  font-family: var(--display);
+  font-weight: 700;
+  font-size: 14px;
+  color: var(--ink);
+  flex-shrink: 0;
+}
+.quote.dark .quote-avatar { border-color: var(--cream); }
+
+/* ============ GALLERY ============ */
+.gallery-row {
+  display: grid;
+  grid-template-columns: repeat(5, 1fr);
+  gap: 16px;
+  margin-top: 32px;
+  padding-bottom: 32px;
+}
+.gallery-row image-slot {
+  width: 100%;
+  aspect-ratio: 4 / 5;
+  border: 1.5px solid var(--ink);
+  border-radius: 6px;
+  background: var(--cream-dark);
+  box-shadow: var(--shadow-card);
+}
+.gallery-row .photo {
+  position: relative;
+}
+.gallery-row .photo:nth-child(1) { transform: rotate(-2deg); }
+.gallery-row .photo:nth-child(2) { transform: rotate(1.5deg); }
+.gallery-row .photo:nth-child(3) { transform: rotate(-0.8deg); }
+.gallery-row .photo:nth-child(4) { transform: rotate(2deg); }
+.gallery-row .photo:nth-child(5) { transform: rotate(-1.6deg); }
+
+.gallery-row .photo .caption {
+  position: absolute;
+  bottom: -26px;
+  left: 8px;
+  font-family: var(--mono);
+  font-size: 10px;
+  letter-spacing: 0.12em;
+  text-transform: uppercase;
+  color: var(--ink);
+  opacity: 0.7;
+  white-space: nowrap;
+}
+
+/* ============ FOOTER ============ */
+footer {
+  background: var(--ink);
+  color: var(--cream);
+  padding: 80px 0 36px;
+  position: relative;
+}
+.footer-cta {
+  font-family: var(--display);
+  font-weight: 900;
+  font-size: clamp(56px, 9vw, 140px);
+  line-height: 0.86;
+  letter-spacing: -0.04em;
+  text-transform: uppercase;
+  color: var(--cream);
+}
+.footer-cta .acc { color: var(--orange); }
+.footer-cols {
+  display: grid;
+  grid-template-columns: 2fr 1fr 1fr 1fr;
+  gap: 48px;
+  margin-top: 64px;
+  padding-top: 48px;
+  border-top: 1px solid rgba(244, 236, 221, 0.15);
+}
+.footer-cols h4 {
+  font-family: var(--mono);
+  font-size: 11px;
+  letter-spacing: 0.18em;
+  text-transform: uppercase;
+  margin-bottom: 18px;
+  color: var(--orange);
+  font-weight: 400;
+}
+.footer-cols ul { list-style: none; display: flex; flex-direction: column; gap: 10px; }
+.footer-cols a {
+  color: var(--cream);
+  text-decoration: none;
+  font-family: var(--body);
+  font-size: 14px;
+  transition: color 140ms ease;
+}
+.footer-cols a:hover { color: var(--orange); }
+.footer-blurb {
+  font-family: var(--body);
+  font-size: 14px;
+  line-height: 1.55;
+  color: var(--cream);
+  opacity: 0.75;
+  max-width: 320px;
+}
+.footer-bottom {
+  display: flex;
+  justify-content: space-between;
+  align-items: flex-end;
+  margin-top: 80px;
+  padding-top: 36px;
+  border-top: 1px solid rgba(244, 236, 221, 0.15);
+  font-family: var(--mono);
+  font-size: 11px;
+  letter-spacing: 0.14em;
+  text-transform: uppercase;
+  color: var(--cream);
+  opacity: 0.7;
+  flex-wrap: wrap;
+  gap: 24px;
+}
+
+/* ============ RESPONSIVE ============ */
+@media (max-width: 1100px) {
+  .wall { grid-template-columns: repeat(3, 1fr); }
+  .quote.tall { grid-row: auto; }
+  .gallery-row { grid-template-columns: repeat(3, 1fr); }
+  .footer-cols { grid-template-columns: 1fr 1fr; }
+}
+@media (max-width: 768px) {
+  .nav-links { display: none; }
+  section { padding: 72px 0; }
+  .wall { grid-template-columns: 1fr 1fr; }
+  .gallery-row { grid-template-columns: 1fr 1fr; }
+  .strip { grid-template-columns: 1fr; gap: 16px; }
+  .strip-label { border-right: none; border-bottom: 1px dashed currentColor; padding-right: 0; padding-bottom: 12px; }
+  .footer-cols { grid-template-columns: 1fr; }
+  .tree-wrap { height: auto; min-height: 400px; }
+  .hero-meta { flex-direction: column; gap: 4px; align-items: flex-start; }
+}
+</style>
+</head>
+<body>
+
+<!-- ================ NAV ================ -->
+<nav class="nav">
+  <div class="shell nav-inner">
+    <a href="#" class="nav-logo">
+      <img src="project/assets/bitshala-logo.png" alt="Bitshala" />
+    </a>
+    <ul class="nav-links">
+      <li><a href="#tree">What we do</a></li>
+      <li><a href="#partners">Partners</a></li>
+      <li><a href="#journey">Journey</a></li>
+      <li><a href="#wall">Wall of Love</a></li>
+      <li><a href="#gallery">Gallery</a></li>
+    </ul>
+    <a href="#" class="btn btn-dark">Join community <span class="arrow">→</span></a>
+  </div>
+</nav>
+
+<!-- ================ HERO ================ -->
+<header class="hero">
+  <div class="hero-grid-bg"></div>
+  <div class="hero-bg-word">BTC</div>
+  <div class="shell">
+    <div class="hero-meta">
+      <span>Est. 2023 · Bengaluru, India</span>
+      <span>Free &amp; Open Source · Non-profit</span>
+      <span>v.2026.01</span>
+    </div>
+    <h1 class="hero-title">
+      A&nbsp;<span class="of">Pathshala</span><br/>
+      <span class="pathshala">For&nbsp;Bitcoin</span>.
+    </h1>
+    <div class="hero-tagline">
+      <p class="hero-tagline-left">
+        Bitshala is a <strong>grassroots education initiative</strong> by Indian
+        Bitcoiners — built to grow the skills, knowledge and people Bitcoin&nbsp;FOSS
+        needs to thrive in the next decade.
+      </p>
+      <div class="hero-ctas">
+        <a class="btn btn-primary" href="#journey">Start your journey <span class="arrow">→</span></a>
+        <a class="btn" href="#tree">Explore activities</a>
+      </div>
+    </div>
+  </div>
+</header>
+
+<!-- ================ TREE / WHAT IS BITSHALA ================ -->
+<section id="tree">
+  <div class="shell">
+    <div class="section-head">
+      <span class="eyebrow">§ 01 / What we actually do</span>
+      <h2 class="section-title">So, what <em style="font-family:var(--display); font-style:italic; font-weight:400;">actually</em> is Bitshala?</h2>
+      <p class="section-sub">
+        Picture a tree. Six branches, six places to grow. Pick a branch — it's
+        all free, all open, all run by people who actually ship Bitcoin code.
+      </p>
+    </div>
+
+    <div class="tree-wrap">
+      <!-- decorative stamps -->
+      <div class="stamp-plus tilt-l" style="top: -10px; left: 4%;">+</div>
+      <div class="stamp-plus tilt-r" style="top: 80px; right: 6%;">+</div>
+      <div class="stamp-circle" style="bottom: 80px; left: 2%;">SINCE<br/>2023</div>
+
+      <!-- the tree (inlined SVG) -->
+      <div style="display:flex; justify-content:center;">
+        <svg style="width:780px; max-width:100%; height:auto; display:block;" viewBox="0 0 900 720" xmlns="http://www.w3.org/2000/svg" aria-hidden="true">
+          <defs>
+            <radialGradient id="foliage1" cx="35%" cy="30%" r="70%">
+              <stop offset="0%" stop-color="#FFA862"/>
+              <stop offset="50%" stop-color="#FF6B1A"/>
+              <stop offset="100%" stop-color="#B8420A"/>
+            </radialGradient>
+            <radialGradient id="foliage2" cx="40%" cy="35%" r="65%">
+              <stop offset="0%" stop-color="#FF8A3D"/>
+              <stop offset="60%" stop-color="#E85A0C"/>
+              <stop offset="100%" stop-color="#8C2E04"/>
+            </radialGradient>
+            <radialGradient id="foliage3" cx="30%" cy="25%" r="80%">
+              <stop offset="0%" stop-color="#FFB57A"/>
+              <stop offset="55%" stop-color="#FF7A2A"/>
+              <stop offset="100%" stop-color="#A53A08"/>
+            </radialGradient>
+            <linearGradient id="trunk" x1="0" y1="0" x2="1" y2="0">
+              <stop offset="0%" stop-color="#1a1411"/>
+              <stop offset="35%" stop-color="#3d2c20"/>
+              <stop offset="65%" stop-color="#2a1d14"/>
+              <stop offset="100%" stop-color="#0a0908"/>
+            </linearGradient>
+            <linearGradient id="trunk-light" x1="0" y1="0" x2="1" y2="0">
+              <stop offset="0%" stop-color="rgba(255,180,120,0)"/>
+              <stop offset="50%" stop-color="rgba(255,180,120,0.18)"/>
+              <stop offset="100%" stop-color="rgba(255,180,120,0)"/>
+            </linearGradient>
+            <filter id="clay" x="-20%" y="-20%" width="140%" height="140%">
+              <feGaussianBlur in="SourceAlpha" stdDeviation="3"/>
+              <feOffset dx="0" dy="6" result="off"/>
+              <feFlood flood-color="#5a1a02" flood-opacity="0.55"/>
+              <feComposite in2="off" operator="in"/>
+              <feComposite in="SourceGraphic"/>
+            </filter>
+            <filter id="dropshadow" x="-20%" y="-20%" width="140%" height="140%">
+              <feGaussianBlur in="SourceAlpha" stdDeviation="14"/>
+              <feOffset dx="0" dy="22"/>
+              <feComponentTransfer><feFuncA type="linear" slope="0.45"/></feComponentTransfer>
+              <feMerge><feMergeNode/><feMergeNode in="SourceGraphic"/></feMerge>
+            </filter>
+            <radialGradient id="hi" cx="30%" cy="20%" r="35%">
+              <stop offset="0%" stop-color="rgba(255,255,255,0.55)"/>
+              <stop offset="100%" stop-color="rgba(255,255,255,0)"/>
+            </radialGradient>
+          </defs>
+
+          <!-- ground shadow -->
+          <ellipse cx="450" cy="688" rx="240" ry="22" fill="#0a0908" opacity="0.18"/>
+          <ellipse cx="450" cy="685" rx="200" ry="14" fill="#0a0908" opacity="0.25"/>
+
+          <!-- root flare -->
+          <g filter="url(#dropshadow)">
+            <path d="M 360 680 Q 380 640 420 620 L 480 620 Q 520 640 540 680 Z" fill="url(#trunk)"/>
+            <path d="M 360 680 Q 320 670 300 678 Q 320 672 360 680 Z" fill="#1a1411"/>
+            <path d="M 540 680 Q 580 670 600 678 Q 580 672 540 680 Z" fill="#1a1411"/>
+          </g>
+
+          <!-- trunk -->
+          <g>
+            <path d="M 420 620 Q 405 540 415 460 Q 425 380 405 320 Q 395 280 415 240" stroke="url(#trunk)" stroke-width="58" stroke-linecap="round" fill="none"/>
+            <path d="M 480 620 Q 495 540 485 460 Q 475 380 495 320 Q 505 280 485 240" stroke="url(#trunk)" stroke-width="58" stroke-linecap="round" fill="none"/>
+            <path d="M 420 620 Q 405 540 415 460 Q 425 380 405 320 Q 395 280 415 240" stroke="url(#trunk-light)" stroke-width="40" stroke-linecap="round" fill="none"/>
+            <!-- bark lines -->
+            <g opacity="0.45" stroke="#0a0908" stroke-width="1.2" fill="none" stroke-linecap="round">
+              <path d="M 415 600 Q 412 540 418 480"/>
+              <path d="M 430 590 Q 428 520 432 460"/>
+              <path d="M 470 590 Q 472 520 468 460"/>
+              <path d="M 485 600 Q 488 540 482 480"/>
+              <path d="M 405 460 Q 410 400 408 340"/>
+              <path d="M 495 460 Q 490 400 492 340"/>
+            </g>
+          </g>
+
+          <!-- branches -->
+          <g stroke="#2a1d14" stroke-width="14" stroke-linecap="round" fill="none" opacity="0.95">
+            <path d="M 410 280 Q 360 240 280 200"/>
+            <path d="M 415 360 Q 360 350 280 380"/>
+            <path d="M 425 470 Q 380 500 320 540"/>
+            <path d="M 490 280 Q 540 230 620 200"/>
+            <path d="M 485 360 Q 540 350 620 380"/>
+            <path d="M 475 470 Q 520 500 580 540"/>
+          </g>
+
+          <!-- foliage -->
+          <g filter="url(#dropshadow)">
+            <ellipse cx="450" cy="200" rx="290" ry="160" fill="url(#foliage1)"/>
+            <ellipse cx="220" cy="220" rx="120" ry="100" fill="url(#foliage2)"/>
+            <ellipse cx="680" cy="220" rx="125" ry="105" fill="url(#foliage2)"/>
+            <ellipse cx="450" cy="100" rx="180" ry="90" fill="url(#foliage3)"/>
+            <ellipse cx="320" cy="160" rx="90" ry="70" fill="url(#foliage1)"/>
+            <ellipse cx="580" cy="160" rx="95" ry="72" fill="url(#foliage1)"/>
+            <ellipse cx="450" cy="280" rx="220" ry="80" fill="url(#foliage2)"/>
+          </g>
+
+          <!-- highlight specular -->
+          <g style="mix-blend-mode: screen;">
+            <ellipse cx="380" cy="120" rx="120" ry="60" fill="url(#hi)" opacity="0.7"/>
+            <ellipse cx="200" cy="195" rx="55" ry="32" fill="url(#hi)" opacity="0.5"/>
+            <ellipse cx="660" cy="195" rx="55" ry="32" fill="url(#hi)" opacity="0.5"/>
+            <ellipse cx="450" cy="60" rx="80" ry="30" fill="url(#hi)" opacity="0.6"/>
+          </g>
+
+          <!-- silhouette outline -->
+          <g fill="none" stroke="#0a0908" stroke-width="2.5" opacity="0.85" stroke-linecap="round" stroke-linejoin="round">
+            <path d="M 160 230 Q 130 200 145 165 Q 100 140 145 105 Q 180 60 240 70 Q 280 30 350 50 Q 410 10 470 30 Q 530 5 590 35 Q 650 25 700 70 Q 760 80 770 130 Q 815 160 790 210 Q 810 260 760 285 Q 730 320 660 320 Q 600 360 510 350 Q 470 380 410 360 Q 340 380 280 350 Q 210 350 165 310 Q 120 290 130 255 Z"/>
+          </g>
+
+          <!-- subtle center line -->
+          <path d="M 450 620 Q 448 540 452 460 Q 455 380 448 320 Q 445 280 452 240" stroke="rgba(255,180,120,0.12)" stroke-width="2" fill="none"/>
+
+          <!-- ground dots -->
+          <g fill="#FF6B1A" opacity="0.85">
+            <circle cx="280" cy="690" r="4"/>
+            <circle cx="640" cy="694" r="3"/>
+            <circle cx="710" cy="685" r="3.5"/>
+            <circle cx="220" cy="685" r="2.5"/>
+          </g>
+        </svg>
+      </div>
+
+      <!-- leaf cards -->
+      <a class="leaf tilt-1" style="top: 30px; left: 0;" href="#">
+        <div class="leaf-label">// Branch 01</div>
+        <div class="leaf-title">Latest in BTC Tech</div>
+        <div class="leaf-desc">Weekly digest — what shipped, what's proposed, what broke. Stay current.</div>
+        <span class="leaf-tag">Weekly · Free</span>
+      </a>
+
+      <a class="leaf tilt-2" style="top: 0; right: 0;" href="#">
+        <div class="leaf-label">// Branch 02</div>
+        <div class="leaf-title">Reading Club</div>
+        <div class="leaf-desc">We pick a book, you show up, we argue the chapters. Mastering Bitcoin → Programming Bitcoin → LN.</div>
+        <span class="leaf-tag">Cohort · Free</span>
+      </a>
+
+      <a class="leaf tilt-3 dark" style="top: 220px; left: 30px;" href="#">
+        <div class="leaf-label" style="opacity:.7;">// Branch 03</div>
+        <div class="leaf-title">PR Review Club</div>
+        <div class="leaf-desc">Read real Bitcoin Core PRs with the contributors. Learn the codebase the way it actually grows.</div>
+        <span class="leaf-tag">Bi-weekly · Free</span>
+      </a>
+
+      <a class="leaf tilt-4" style="top: 250px; right: 20px;" href="#">
+        <div class="leaf-label">// Branch 04</div>
+        <div class="leaf-title">Bengaluru BITDEVS</div>
+        <div class="leaf-desc">In-person devs meetup. Topics, demos, samosas. Quarterly, no agenda safe.</div>
+        <span class="leaf-tag">IRL · Quarterly</span>
+      </a>
+
+      <a class="leaf tilt-5" style="bottom: 60px; left: 90px;" href="#">
+        <div class="leaf-label">// Branch 05</div>
+        <div class="leaf-title">Study Cohorts</div>
+        <div class="leaf-desc">Time-boxed deep dives — Lightning, Mining, MuSig2, Taproot. With teachers who built it.</div>
+        <span class="leaf-tag">8 weeks · Free</span>
+      </a>
+
+      <a class="leaf tilt-6 dark" style="bottom: 30px; right: 80px;" href="#">
+        <div class="leaf-label" style="opacity:.7;">// Branch 06</div>
+        <div class="leaf-title">Fellowship</div>
+        <div class="leaf-desc">Paid program. Six months, real FOSS contributions, mentorship from Core devs.</div>
+        <span class="leaf-tag">Paid · Selective</span>
+      </a>
+    </div>
+  </div>
+</section>
+
+<!-- ================ PARTNERS / TRUSTED BY ================ -->
+<section id="partners" style="padding-top: 40px;">
+  <div class="shell">
+    <div class="section-head" style="margin-bottom: 36px;">
+      <span class="eyebrow">§ 02 / How we pull this off</span>
+      <h2 class="section-title">Backed by people who<br/><span class="accent">actually build</span> Bitcoin.</h2>
+    </div>
+
+    <div class="strip">
+      <div class="strip-label">Trusted&nbsp;by</div>
+      <div class="strip-logos">
+        <span class="org"><span class="dot"></span>HRF</span>
+        <span class="org"><span class="dot"></span>OpenSats</span>
+        <span class="org"><span class="dot"></span>Spiral</span>
+        <span class="org"><span class="dot"></span>Brink</span>
+        <span class="org"><span class="dot"></span>Strike</span>
+      </div>
+    </div>
+    <div class="strip cream">
+      <div class="strip-label">In&nbsp;collaboration</div>
+      <div class="strip-logos">
+        <span class="org"><span class="dot"></span>Chaincode Labs</span>
+        <span class="org"><span class="dot"></span>Summer of Bitcoin</span>
+        <span class="org"><span class="dot"></span>BTrust</span>
+        <span class="org"><span class="dot"></span>BitDevs Global</span>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ================ STAIRCASE / JOURNEY ================ -->
+<section id="journey" class="stairs-section">
+  <div class="shell">
+    <div class="section-head">
+      <span class="eyebrow">§ 03 / Six steps up</span>
+      <h2 class="section-title">How can you <em style="font-style:italic; font-weight:400;">start</em><br/>your journey?</h2>
+      <p class="section-sub">A staircase, not a leap. Each block builds on the last. Take one step. Or take six. We'll be here.</p>
+    </div>
+
+    <div class="stairs">
+      <div class="stairs-track">
+        <div class="step" style="bottom: 0; left: 0; z-index: 6;">
+          <div>
+            <div class="step-num">STEP 01</div>
+            <div class="step-title">Join Discord</div>
+          </div>
+          <div class="step-desc">Lurk, ask questions, meet 4,200+ Bitcoiners.</div>
+        </div>
+        <div class="step" style="bottom: 70px; left: 200px; z-index: 5;">
+          <div>
+            <div class="step-num">STEP 02</div>
+            <div class="step-title">Club Activities</div>
+          </div>
+          <div class="step-desc">Weekly Reading Club. PR Review Club.</div>
+        </div>
+        <div class="step" style="bottom: 140px; left: 400px; z-index: 4;">
+          <div>
+            <div class="step-num">STEP 03</div>
+            <div class="step-title">Hands-on Cohorts</div>
+          </div>
+          <div class="step-desc">Pick a deep-dive. 8 weeks. Build something.</div>
+        </div>
+        <div class="step" style="bottom: 210px; left: 600px; z-index: 3;">
+          <div>
+            <div class="step-num">STEP 04</div>
+            <div class="step-title">IRL Events</div>
+          </div>
+          <div class="step-desc">BITDEVS meetups, hackathons, conferences.</div>
+        </div>
+        <div class="step" style="bottom: 280px; left: 800px; z-index: 2;">
+          <div>
+            <div class="step-num">STEP 05</div>
+            <div class="step-title">Fellowship</div>
+          </div>
+          <div class="step-desc">Paid 6-month program. Mentorship. FOSS work.</div>
+        </div>
+        <div class="step" style="bottom: 350px; left: 1000px; z-index: 1; background: linear-gradient(180deg, #ff8a3d 0%, #e85a0c 100%); color: var(--ink);">
+          <div>
+            <div class="step-num" style="color: var(--ink);">STEP 06</div>
+            <div class="step-title" style="color: var(--ink);">Starter Grant</div>
+          </div>
+          <div class="step-desc" style="color: var(--ink); opacity: 0.78;">Build your own Bitcoin project. We back it.</div>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ================ WALL OF LOVE ================ -->
+<section id="wall">
+  <div class="shell">
+    <div class="section-head">
+      <span class="eyebrow">§ 04 / Receipts</span>
+      <h2 class="section-title">Wall of <span class="accent">love</span>.</h2>
+      <p class="section-sub">People who started where you are now, and what they say about it.</p>
+    </div>
+
+    <div style="position: relative;">
+      <!-- decorative stamps -->
+      <div class="stamp-plus tilt-l" style="top: -28px; left: 38%; width: 44px; height: 44px; font-size: 28px;">+</div>
+      <div class="stamp-plus tilt-r" style="bottom: -22px; right: 12%; width: 44px; height: 44px; font-size: 28px;">+</div>
+
+      <div class="wall">
+        <div class="quote tall">
+          <p class="quote-text lg">"Personally, I was able to teach myself more deeply with concepts I only knew at a surface level. The reading club gave me a place to keep up with what's happening — Bitcoin's not a slow-moving field."</p>
+          <div class="quote-meta">
+            <div class="quote-avatar">A</div>
+            <span>Aman · Reading Club</span>
+          </div>
+        </div>
+
+        <div class="quote dark">
+          <p class="quote-text">"I came across Bitshala while working on an SOB assignment and decided to join. Honestly, it's been such an amazing experience."</p>
+          <div class="quote-meta">
+            <div class="quote-avatar">P</div>
+            <span>Priyanshi · Fellowship</span>
+          </div>
+        </div>
+
+        <div class="quote">
+          <p class="quote-text">"The patience and practical examples — I think they are very well-equipped to make you actually reflect on the material."</p>
+          <div class="quote-meta">
+            <div class="quote-avatar">S</div>
+            <span>Saubhagya · Cohorts</span>
+          </div>
+        </div>
+
+        <div class="quote orange">
+          <p class="quote-text lg" style="font-weight: 700;">"If I could do it, you can too." — what they're all trying to say :)</p>
+          <div class="quote-meta">
+            <span style="opacity: 0.7;">— Bitshala Mantra</span>
+          </div>
+        </div>
+
+        <div class="quote">
+          <p class="quote-text">"Anyone exploring the basics in their evenings can gain valuable knowledge about the technical, economic and philosophical dimensions of Bitcoin."</p>
+          <div class="quote-meta">
+            <div class="quote-avatar">N</div>
+            <span>Nishant · Club Activities</span>
+          </div>
+        </div>
+
+        <div class="quote dark">
+          <p class="quote-text">"Before the cohort, I was just a person with some idea of Bitcoin transactions. Then I got an idea of what the code looks like — wow."</p>
+          <div class="quote-meta">
+            <div class="quote-avatar">R</div>
+            <span>Rahul · Protocol Dev</span>
+          </div>
+        </div>
+
+        <div class="quote">
+          <p class="quote-text">"Participating in the Programming Bitcoin cohort was one of the most transformative experiences for me. The sessions provided invaluable clarity on key concepts."</p>
+          <div class="quote-meta">
+            <div class="quote-avatar">D</div>
+            <span>Devansh · Programming BTC</span>
+          </div>
+        </div>
+
+        <div class="quote">
+          <p class="quote-text">"I came in feeling lost. Now I open Bitcoin Core source like it's a book I've already half-read."</p>
+          <div class="quote-meta">
+            <div class="quote-avatar">K</div>
+            <span>Kavya · PR Review</span>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ================ GALLERY ================ -->
+<section id="gallery">
+  <div class="shell">
+    <div class="section-head">
+      <span class="eyebrow">§ 05 / In the wild</span>
+      <h2 class="section-title">Our <span class="accent">gallery</span>.</h2>
+      <p class="section-sub">BITDEVS nights, cohort whiteboards, late-night PR reviews. Drop your own — they replace these placeholders.</p>
+    </div>
+
+    <div class="gallery-row">
+      <div class="photo">
+        <image-slot id="g1" placeholder="BITDEVS night" shape="rounded"></image-slot>
+        <span class="caption">// 01 — BITDEVS · Bengaluru</span>
+      </div>
+      <div class="photo">
+        <image-slot id="g2" placeholder="Cohort whiteboard" shape="rounded"></image-slot>
+        <span class="caption">// 02 — LN cohort</span>
+      </div>
+      <div class="photo">
+        <image-slot id="g3" placeholder="Reading club" shape="rounded"></image-slot>
+        <span class="caption">// 03 — Reading Club</span>
+      </div>
+      <div class="photo">
+        <image-slot id="g4" placeholder="Fellowship offsite" shape="rounded"></image-slot>
+        <span class="caption">// 04 — Fellowship</span>
+      </div>
+      <div class="photo">
+        <image-slot id="g5" placeholder="Hackathon" shape="rounded"></image-slot>
+        <span class="caption">// 05 — Hackday</span>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ================ FOOTER ================ -->
+<footer>
+  <div class="shell">
+    <p class="footer-cta">
+      It's not just<br/>
+      about <em style="font-style:italic; font-weight:400; font-family:var(--display);">learning</em>.<br/>
+      It's about <span class="acc">growing</span>.
+    </p>
+
+    <div class="footer-cols">
+      <div>
+        <h4>Bitshala</h4>
+        <p class="footer-blurb">A grassroots Bitcoin FOSS education initiative, run by Indian Bitcoiners. Free and open. Always.</p>
+      </div>
+      <div>
+        <h4>Programs</h4>
+        <ul>
+          <li><a href="#">Reading Club</a></li>
+          <li><a href="#">PR Review Club</a></li>
+          <li><a href="#">Study Cohorts</a></li>
+          <li><a href="#">Fellowship</a></li>
+        </ul>
+      </div>
+      <div>
+        <h4>Community</h4>
+        <ul>
+          <li><a href="#">Discord</a></li>
+          <li><a href="#">GitHub</a></li>
+          <li><a href="#">Twitter / X</a></li>
+          <li><a href="#">Newsletter</a></li>
+        </ul>
+      </div>
+      <div>
+        <h4>About</h4>
+        <ul>
+          <li><a href="#">Mission</a></li>
+          <li><a href="#">Sponsors</a></li>
+          <li><a href="#">Contact</a></li>
+          <li><a href="#">Code of Conduct</a></li>
+        </ul>
+      </div>
+    </div>
+
+    <div class="footer-bottom">
+      <span>© 2026 Bitshala · Made in Bengaluru</span>
+      <span>v.2026.01 · CC BY-SA</span>
+      <span>21,000,000 sats well spent</span>
+    </div>
+  </div>
+</footer>
+
+</body>
+</html>
