@@ -1,0 +1,137 @@
+
+<svg viewBox="0 0 900 720" xmlns="http://www.w3.org/2000/svg" class="tree-svg" aria-hidden="true">
+  <defs>
+    
+    <radialGradient id="foliage1" cx="35%" cy="30%" r="70%">
+      <stop offset="0%" stop-color="#FFA862"></stop>
+      <stop offset="50%" stop-color="#FF6B1A"></stop>
+      <stop offset="100%" stop-color="#B8420A"></stop>
+    </radialGradient>
+    <radialGradient id="foliage2" cx="40%" cy="35%" r="65%">
+      <stop offset="0%" stop-color="#FF8A3D"></stop>
+      <stop offset="60%" stop-color="#E85A0C"></stop>
+      <stop offset="100%" stop-color="#8C2E04"></stop>
+    </radialGradient>
+    <radialGradient id="foliage3" cx="30%" cy="25%" r="80%">
+      <stop offset="0%" stop-color="#FFB57A"></stop>
+      <stop offset="55%" stop-color="#FF7A2A"></stop>
+      <stop offset="100%" stop-color="#A53A08"></stop>
+    </radialGradient>
+    
+    <linearGradient id="trunk" x1="0" y1="0" x2="1" y2="0">
+      <stop offset="0%" stop-color="#1a1411"></stop>
+      <stop offset="35%" stop-color="#3d2c20"></stop>
+      <stop offset="65%" stop-color="#2a1d14"></stop>
+      <stop offset="100%" stop-color="#0a0908"></stop>
+    </linearGradient>
+    <linearGradient id="trunk-light" x1="0" y1="0" x2="1" y2="0">
+      <stop offset="0%" stop-color="rgba(255,180,120,0)"></stop>
+      <stop offset="50%" stop-color="rgba(255,180,120,0.18)"></stop>
+      <stop offset="100%" stop-color="rgba(255,180,120,0)"></stop>
+    </linearGradient>
+    
+    <filter id="clay" x="-20%" y="-20%" width="140%" height="140%">
+      <feGaussianBlur in="SourceAlpha" stdDeviation="3"></feGaussianBlur>
+      <feOffset dx="0" dy="6" result="off"></feOffset>
+      <feFlood flood-color="#5a1a02" flood-opacity="0.55"></feFlood>
+      <feComposite in2="off" operator="in"></feComposite>
+      <feComposite in="SourceGraphic"></feComposite>
+    </filter>
+    <filter id="dropshadow" x="-20%" y="-20%" width="140%" height="140%">
+      <feGaussianBlur in="SourceAlpha" stdDeviation="14"></feGaussianBlur>
+      <feOffset dx="0" dy="22"></feOffset>
+      <feComponentTransfer><feFuncA type="linear" slope="0.45"></feFuncA></feComponentTransfer>
+      <feMerge><feMergeNode></feMergeNode><feMergeNode in="SourceGraphic"></feMergeNode></feMerge>
+    </filter>
+    
+    <radialGradient id="hi" cx="30%" cy="20%" r="35%">
+      <stop offset="0%" stop-color="rgba(255,255,255,0.55)"></stop>
+      <stop offset="100%" stop-color="rgba(255,255,255,0)"></stop>
+    </radialGradient>
+  </defs>
+
+  
+  <ellipse cx="450" cy="688" rx="240" ry="22" fill="#0a0908" opacity="0.18"></ellipse>
+  <ellipse cx="450" cy="685" rx="200" ry="14" fill="#0a0908" opacity="0.25"></ellipse>
+
+  
+  <g filter="url(#dropshadow)">
+    <path d="M 360 680 Q 380 640 420 620 L 480 620 Q 520 640 540 680 Z" fill="url(#trunk)"></path>
+    
+    <path d="M 360 680 Q 320 670 300 678 Q 320 672 360 680 Z" fill="#1a1411"></path>
+    <path d="M 540 680 Q 580 670 600 678 Q 580 672 540 680 Z" fill="#1a1411"></path>
+  </g>
+
+  
+  <g>
+    <path d="M 420 620 Q 405 540 415 460 Q 425 380 405 320 Q 395 280 415 240" stroke="url(#trunk)" stroke-width="58" stroke-linecap="round" fill="none"></path>
+    <path d="M 480 620 Q 495 540 485 460 Q 475 380 495 320 Q 505 280 485 240" stroke="url(#trunk)" stroke-width="58" stroke-linecap="round" fill="none"></path>
+    
+    <path d="M 420 620 Q 405 540 415 460 Q 425 380 405 320 Q 395 280 415 240" stroke="url(#trunk-light)" stroke-width="40" stroke-linecap="round" fill="none"></path>
+    
+    <g opacity="0.45" stroke="#0a0908" stroke-width="1.2" fill="none" stroke-linecap="round">
+      <path d="M 415 600 Q 412 540 418 480"></path>
+      <path d="M 430 590 Q 428 520 432 460"></path>
+      <path d="M 470 590 Q 472 520 468 460"></path>
+      <path d="M 485 600 Q 488 540 482 480"></path>
+      <path d="M 405 460 Q 410 400 408 340"></path>
+      <path d="M 495 460 Q 490 400 492 340"></path>
+    </g>
+  </g>
+
+  
+  <g stroke="#2a1d14" stroke-width="14" stroke-linecap="round" fill="none" opacity="0.95">
+    
+    <path d="M 410 280 Q 360 240 280 200"></path>
+    
+    <path d="M 415 360 Q 360 350 280 380"></path>
+    
+    <path d="M 425 470 Q 380 500 320 540"></path>
+    
+    <path d="M 490 280 Q 540 230 620 200"></path>
+    
+    <path d="M 485 360 Q 540 350 620 380"></path>
+    
+    <path d="M 475 470 Q 520 500 580 540"></path>
+  </g>
+
+  
+  <g filter="url(#dropshadow)">
+    
+    <ellipse cx="450" cy="200" rx="290" ry="160" fill="url(#foliage1)"></ellipse>
+    
+    <ellipse cx="220" cy="220" rx="120" ry="100" fill="url(#foliage2)"></ellipse>
+    
+    <ellipse cx="680" cy="220" rx="125" ry="105" fill="url(#foliage2)"></ellipse>
+    
+    <ellipse cx="450" cy="100" rx="180" ry="90" fill="url(#foliage3)"></ellipse>
+    
+    <ellipse cx="320" cy="160" rx="90" ry="70" fill="url(#foliage1)"></ellipse>
+    <ellipse cx="580" cy="160" rx="95" ry="72" fill="url(#foliage1)"></ellipse>
+    <ellipse cx="450" cy="280" rx="220" ry="80" fill="url(#foliage2)"></ellipse>
+  </g>
+
+  
+  <g style="mix-blend-mode: screen;">
+    <ellipse cx="380" cy="120" rx="120" ry="60" fill="url(#hi)" opacity="0.7"></ellipse>
+    <ellipse cx="200" cy="195" rx="55" ry="32" fill="url(#hi)" opacity="0.5"></ellipse>
+    <ellipse cx="660" cy="195" rx="55" ry="32" fill="url(#hi)" opacity="0.5"></ellipse>
+    <ellipse cx="450" cy="60" rx="80" ry="30" fill="url(#hi)" opacity="0.6"></ellipse>
+  </g>
+
+  
+  <g fill="none" stroke="#0a0908" stroke-width="2.5" opacity="0.85" stroke-linecap="round" stroke-linejoin="round">
+    <path d="M 160 230 Q 130 200 145 165 Q 100 140 145 105 Q 180 60 240 70 Q 280 30 350 50 Q 410 10 470 30 Q 530 5 590 35 Q 650 25 700 70 Q 760 80 770 130 Q 815 160 790 210 Q 810 260 760 285 Q 730 320 660 320 Q 600 360 510 350 Q 470 380 410 360 Q 340 380 280 350 Q 210 350 165 310 Q 120 290 130 255 Z"></path>
+  </g>
+
+  
+  <path d="M 450 620 Q 448 540 452 460 Q 455 380 448 320 Q 445 280 452 240" stroke="rgba(255,180,120,0.12)" stroke-width="2" fill="none"></path>
+
+  
+  <g fill="#FF6B1A" opacity="0.85">
+    <circle cx="280" cy="690" r="4"></circle>
+    <circle cx="640" cy="694" r="3"></circle>
+    <circle cx="710" cy="685" r="3.5"></circle>
+    <circle cx="220" cy="685" r="2.5"></circle>
+  </g>
+</svg>
